@@ -22,7 +22,7 @@ for image in ns.natsorted(glob.glob(IMAGE_REPO)):
     image_list.append(image)
 
 # Finding similarity Index of all combination of images like (3.jpg,2.jpg), (4.jpg,2.jpg), (4.jpg,3.jpg),
-# etc Not finding unnecessary similarity indexes in cases like same image or like if index already calc for image
+# etc Not finding unnecessary similarity indices in cases like same image or like if index already calc for image
 # pair 2 and 3 not again calculating for image 3 and image 2 combination. Hence, increasing efficiency.
 i = 0
 while i < len(image_list):
