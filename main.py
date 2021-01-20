@@ -16,7 +16,8 @@ mainImage = []
 imageToCompare = []
 similarityIndexList = []
 
-# In memory list of all images
+# In memory list of all images. Used natsorted, to have file list in proper order like 2.jpg, 3.jpg, etc unlike the
+# python default behaviour 1.jpg, 11.jpg, 2.jpg to lower the repetitive calc of pairs like (2,3) and (3,2).
 for image in ns.natsorted(glob.glob(IMAGE_REPO)):
     image_list.append(image)
 
