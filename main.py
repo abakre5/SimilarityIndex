@@ -20,29 +20,33 @@ similarityIndexList = []
 for image in ns.natsorted(glob.glob(IMAGE_REPO)):
     image_list.append(image)
 
-# Finding similarity Index of all combination of images like (2.jpg,3.jpg), (2.jpg,4.jpg), (2.jpg,5.jpg), etc
+# Finding similarity Index of all combination of images like (3.jpg,2.jpg), (4.jpg,2.jpg), (4.jpg,3.jpg),
+# etc Not finding unnecessary similarity indexes in cases like same image or like if index already calc for image
+# pair 2 and 3 not again calculating for image 3 and image 2 combination. Hence, increasing efficiency.
 i = 0
 while i < len(image_list):
     j = 0
     primeImage = cv2.imread(image_list[i])
+    # Converting to grayscale image to reduce noise in color images for better comparison
     grayPrimeImage = cv2.cvtColor(primeImage, cv2.COLOR_BGR2RGB)
     while j < len(image_list):
-        if image_list[i] != image_list[j] and j <= i:
+        if image_list[i] != image_list[j] and j >= i:
             refImage = cv2.imread(image_list[j])
             grayRefImage = cv2.cvtColor(refImage, cv2.COLOR_BGR2RGB)
             value = ssimage(grayPrimeImage, grayRefImage, multichannel=True, Full=True)
-            mainImage.append(image_list[i])
-            imageToCompare.append(image_list[j])
+            mainImage.append(image_list[i].split("\\")[1])
+            imageToCompare.append(image_list[j].split("\\")[1])
             similarityIndexList.append(value)
-            print(image_list[i], " -> ", image_list[j], "->", value)
         j = j + 1
     i = i + 1
 
-outputObj = {
-    'Image1': mainImage,
-    'Image2': imageToCompare,
-    'SimilarityIndex': similarityIndexList,
+# Converting acquired data into object for csv export
+csvObject = {
+    'Image 1': mainImage,
+    'Image 2': imageToCompare,
+    'Similarity Index': similarityIndexList,
 }
 
-df = pd.DataFrame(outputObj)
-df.to_csv(OUTPUT_CSV_FILENAME)
+# CSV export
+df = pd.DataFrame(csvObject)
+df.to_csv(OUTPUT_CSV_FILENAME, index=False)
